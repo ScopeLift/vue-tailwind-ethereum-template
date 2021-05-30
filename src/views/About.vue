@@ -30,14 +30,8 @@
               class="self-center flex-shrink-0 h-5 w-5 text-green-500"
               aria-hidden="true"
             />
-            <ArrowSmDownIcon
-              v-else
-              class="self-center flex-shrink-0 h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
-            <span class="sr-only">
-              {{ item.changeType === 'increase' ? 'Increased' : 'Decreased' }} by
-            </span>
+            <ArrowSmDownIcon v-else class="self-center flex-shrink-0 h-5 w-5 text-red-500" aria-hidden="true" />
+            <span class="sr-only"> {{ item.changeType === 'increase' ? 'Increased' : 'Decreased' }} by </span>
             {{ item.change }}
           </p>
           <div class="absolute bottom-0 inset-x-0 bg-gray-50 px-4 py-4 sm:px-6">
@@ -54,9 +48,9 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/vue/solid';
-import { CursorClickIcon, MailOpenIcon, UsersIcon } from '@heroicons/vue/outline';
+import { defineComponent } from 'vue'
+import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/vue/solid'
+import { CursorClickIcon, MailOpenIcon, UsersIcon } from '@heroicons/vue/outline'
 
 const stats = [
   {
@@ -83,7 +77,7 @@ const stats = [
     change: '3.2%',
     changeType: 'decrease',
   },
-];
+]
 export default defineComponent({
   components: {
     ArrowSmDownIcon,
@@ -92,7 +86,7 @@ export default defineComponent({
   setup() {
     return {
       stats,
-    };
+    }
   },
-});
+})
 </script>
