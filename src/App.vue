@@ -1,10 +1,20 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div class="flex flex-col min-h-screen">
+    <header id="nav"><router-link to="/">Home</router-link></header>
+    <main class="flex-grow"><router-view /></main>
+    <footer id="footer"><layout-footer /></footer>
   </div>
-  <router-view />
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import LayoutFooter from './components/LayoutFooter.vue';
+
+export default defineComponent({
+  name: 'App',
+  components: { LayoutFooter },
+});
+</script>
 
 <style>
 #app {
