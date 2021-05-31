@@ -1,18 +1,19 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <header id="nav"><router-link to="/">Home</router-link></header>
+    <layout-header id="header" />
     <main class="flex-grow"><router-view /></main>
-    <footer id="footer"><layout-footer /></footer>
+    <layout-footer id="footer" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutFooter from './components/LayoutFooter.vue';
 
 export default defineComponent({
   name: 'App',
-  components: { LayoutFooter },
+  components: { LayoutHeader, LayoutFooter },
 });
 </script>
 
