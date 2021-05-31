@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../views/Home.vue';
 
+// For info on using Vue Router with the Composition API, see https://next.router.vuejs.org/guide/advanced/composition-api.html
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -14,6 +16,8 @@ const routes: Array<RouteRecordRaw> = [
     // this generates a separate chunk (about.[hash].js) for this route which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
+  // Fallback route for handling 404s
+  { path: '/:pathMatch(.*)*', name: '404', component: () => import('../views/Error404.vue') },
 ];
 
 const router = createRouter({
