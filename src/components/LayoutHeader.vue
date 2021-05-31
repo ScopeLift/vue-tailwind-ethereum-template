@@ -20,38 +20,7 @@
           </div>
         </div>
         <div class="ml-10 space-x-4">
-          <a
-            href="#"
-            class="
-              inline-block
-              bg-indigo-500
-              py-2
-              px-4
-              border border-transparent
-              rounded-md
-              text-base
-              font-medium
-              text-white
-              hover:bg-opacity-75
-            "
-            >Sign in</a
-          >
-          <a
-            href="/"
-            class="
-              inline-block
-              bg-white
-              py-2
-              px-4
-              border border-transparent
-              rounded-md
-              text-base
-              font-medium
-              text-indigo-600
-              hover:bg-indigo-50
-            "
-            >Sign up</a
-          >
+          <button class="btn btn-secondary">Connect Wallet</button>
         </div>
       </div>
       <div class="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
