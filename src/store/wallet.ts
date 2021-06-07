@@ -36,7 +36,7 @@ function resetState() {
 }
 
 // Settings
-const rpcUrl = process.env.VUE_APP_RPC_URL;
+const rpcUrl = `https://mainnet.infura.io/v3/${String(process.env.INFURA_ID)}`;
 const infuraApiKey = process.env.VUE_APP_INFURA_API_KEY;
 const walletChecks = [{ checkName: 'connect' }];
 const wallets = [
