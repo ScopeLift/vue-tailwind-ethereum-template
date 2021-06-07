@@ -20,7 +20,12 @@
           </div>
         </div>
         <div class="ml-10 space-x-4">
-          <button class="btn btn-secondary">Connect Wallet</button>
+          <div v-if="userDisplayName">{{ userDisplayName }}</div>
+          <div v-else-if="!isSupportedNetwork" class="flex items-center">
+            <ExclamationIcon class="h-5 w-5 text-yellow-500 mr-2" />
+            <div class="text-gray-500">Unsupported network</div>
+          </div>
+          <button v-else @click="connectWallet" class="btn btn-secondary">Connect Wallet</button>
         </div>
       </div>
       <div class="py-4 flex flex-wrap justify-center space-x-6 lg:hidden">
@@ -41,7 +46,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import useWalletStore from 'src/store/wallet';
+import { ExclamationIcon } from '@heroicons/vue/solid';
 
+// Header menu bar items
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
@@ -51,10 +59,10 @@ const navigation = [
 
 export default defineComponent({
   name: 'LayoutHeader',
+  components: { ExclamationIcon },
   setup() {
-    return {
-      navigation,
-    };
+    const { connectWallet, isSupportedNetwork, userDisplayName } = useWalletStore();
+    return { connectWallet, isSupportedNetwork, navigation, userDisplayName };
   },
 });
 </script>

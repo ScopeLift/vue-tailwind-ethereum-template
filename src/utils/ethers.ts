@@ -3,4 +3,5 @@
  * are in this file, and it removes noise from having a lot of import lines in other packages
  */
 export { getAddress } from '@ethersproject/address';
-export { JsonRpcSigner, Network, Web3Provider } from '@ethersproject/providers';
+export { Network } from '@ethersproject/networks';
+export { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
