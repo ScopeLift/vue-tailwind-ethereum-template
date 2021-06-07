@@ -1,5 +1,5 @@
 <template>
-  <div>Hello {{ userDisplayName }}</div>
+  <div class="text-gray-700">Hello {{ userDisplayName }}</div>
 </template>
 
 <script lang="ts">

@@ -14,7 +14,9 @@
         </a>
       </div>
       <div class="mt-8 md:mt-0 md:order-1">
-        <p class="text-sm text-center text-gray-400">&copy; 2020 ScopeLift. All rights reserved.</p>
+        <SunIcon v-if="isDark" @click="toggleDarkMode" class="h-5 w-5 text-gray-400 cursor-pointer" />
+        <MoonIcon v-else @click="toggleDarkMode" class="h-5 w-5 text-gray-400 cursor-pointer" />
+        <p class="text-sm text-center text-gray-400 mt-2">&copy; 2020 ScopeLift. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -22,6 +24,8 @@
 
 <script lang="ts">
 import { defineComponent, h } from 'vue';
+import { MoonIcon, SunIcon } from '@heroicons/vue/solid';
+import useSettingsStore from 'src/store/settings';
 
 // See here to find more social media icon SVG paths: https://www.flaticon.com/free-icons/social-media
 const navigation = [
@@ -69,10 +73,10 @@ const navigation = [
 
 export default defineComponent({
   name: 'LayoutFooter',
+  components: { MoonIcon, SunIcon },
   setup() {
-    return {
-      navigation,
-    };
+    const { isDark, toggleDarkMode } = useSettingsStore();
+    return { isDark, navigation, toggleDarkMode };
   },
 });
 </script>
