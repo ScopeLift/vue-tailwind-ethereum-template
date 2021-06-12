@@ -1,4 +1,4 @@
-/* eslint-disable */
+// Shim for Vue composition API
 declare module '*.vue' {
   import type { DefineComponent } from 'vue';
   const component: DefineComponent<{}, {}, any>;
@@ -9,3 +9,11 @@ declare module '*.vue' {
 // file for module 'moduleName'` errors
 declare module '@heroicons/*';
 declare module 'nightwind/helper';
+
+// Shims for environment variables
+interface ImportMeta {
+  env: {
+    VITE_BLOCKNATIVE_API_KEY: string;
+    VITE_INFURA_API_KEY: string;
+  };
+}

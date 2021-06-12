@@ -36,8 +36,8 @@ function resetState() {
 }
 
 // Settings
-const rpcUrl = `https://mainnet.infura.io/v3/${String(process.env.INFURA_ID)}`;
-const infuraApiKey = process.env.VUE_APP_INFURA_API_KEY;
+const rpcUrl = `https://mainnet.infura.io/v3/${import.meta.env.VITE_INFURA_API_KEY}`;
+const infuraApiKey = import.meta.env.VITE_INFURA_API_KEY;
 const walletChecks = [{ checkName: 'connect' }];
 const wallets = [
   { walletName: 'metamask', preferred: true },
@@ -54,7 +54,7 @@ export default function useWalletStore() {
    */
   function initializeOnboard() {
     onboard = Onboard({
-      dappId: process.env.VUE_APP_BLOCKNATIVE_API_KEY,
+      dappId: import.meta.env.VITE_BLOCKNATIVE_API_KEY,
       darkMode: false,
       networkId: 1,
       walletSelect: { wallets },
@@ -132,7 +132,6 @@ export default function useWalletStore() {
 
     // Get ENS name
     const _userEns = await _provider.lookupAddress(_userAddress);
-    console.log('_userEns: ', _userEns);
 
     // Now we save the user's info to the store. We don't do this earlier because the UI is reactive based on these
     // parameters, and we want to ensure this method completed successfully before updating the UI
