@@ -17,10 +17,11 @@ export default defineComponent({
   name: 'App',
   components: { LayoutHeader, LayoutFooter },
   setup() {
-    // Try connecting user's wallet on page load
+    // Load settings and try connecting user's wallet on page load
     const { connectWallet } = useWalletStore();
-    const { lastWallet } = useSettingsStore();
+    const { lastWallet, initializeSettings } = useSettingsStore();
     onMounted(async () => {
+      await initializeSettings();
       if (lastWallet.value) await connectWallet(lastWallet.value);
     });
   },

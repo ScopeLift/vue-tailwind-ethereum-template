@@ -2,7 +2,7 @@
  * @dev User settings are managed here and persisted with localStorage
  */
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import nightwind from 'nightwind/helper';
 
 // Local storage key names
@@ -21,7 +21,7 @@ const theme = ref<string>(); // light or dark theme
 
 // Composition function for managing state
 export default function useSettingsStore() {
-  onMounted(() => {
+  async function initializeSettings() {
     // Initialize nightwind (used for dark mode)
     nightwind.init();
 
@@ -29,7 +29,7 @@ export default function useSettingsStore() {
     lastWallet.value = load(settings.lastWallet) ? String(load(settings.lastWallet)) : undefined;
     theme.value = load(settings.theme) ? String(load(settings.theme)) : 'light';
     if (theme.value === 'dark') toggleDarkMode(); // make sure to set app to dark mode when required
-  });
+  }
 
   function setLastWallet(walletName: string) {
     save(settings.lastWallet, walletName);
@@ -41,6 +41,7 @@ export default function useSettingsStore() {
   }
 
   return {
+    initializeSettings,
     // Wallet
     setLastWallet,
     lastWallet: computed(() => lastWallet.value),
