@@ -50,12 +50,11 @@
     "lint-staged": "^11.0.0",
     "postcss": "^8.3.2",
     "prettier": "^2.3.1",
-    "simple-git-hooks": "^2.4.1",
     "typescript": "~4.3.2",
     "vite": "^2.3.7",
     "vue-tsc": "^0.1.7"
   },
   "simple-git-hooks": {
-    "pre-commit": "yarn prettier && yarn lint"
+    "pre-commit": "yarn prettier"
   }
 }
