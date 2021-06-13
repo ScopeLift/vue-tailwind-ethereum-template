@@ -94,9 +94,12 @@ export default function useWalletStore() {
    * @notice Prompt user to connect wallet, or attempt to connect to wallet specified by `name`
    * @param name Wallet name to connect, or undefined to prompt user to select a wallet
    */
-  async function connectWallet(name: string | undefined = undefined) {
+  async function connectWallet(name: string | undefined | MouseEvent = undefined) {
     // If user already connected wallet, return
     if (userAddress.value) return;
+
+    // If input type is MouseEvent, this method was ran from clicking a DOM element, so set name to undefined
+    if (name && typeof name !== 'string' && 'pageX' in name) name = undefined;
 
     // Otherwise, prompt them for connection / wallet change
     if (!onboard) initializeOnboard(); // instantiate Onboard instance

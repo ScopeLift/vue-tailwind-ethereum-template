@@ -10,7 +10,7 @@
           class="text-gray-400 hover:text-gray-500"
         >
           <span class="sr-only">{{ item.name }}</span>
-          <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
+          <component :is="item.icon" class="h-6 w-6" />
         </a>
       </div>
       <div class="mt-8 md:mt-0 md:order-1">
