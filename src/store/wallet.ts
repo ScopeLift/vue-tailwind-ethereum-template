@@ -1,50 +1,64 @@
 /**
- * State is handled in reusable components, where each component is its own self-contained
- * file consisting of one function defined used the composition API.
+ * @dev Information about the user's wallet, network, etc. are stored and managed here
  *
- * Since we want the wallet state to be shared between all instances when this file is imported,
- * we defined state outside of the function definition.
+ * @dev State is handled in reusable components, where each component is its own self-contained file consisting of
+ * one function defined used the composition API. Since we want the wallet state to be shared between all instances
+ * when this file is imported, we defined state outside of the function definition.
+ *
+ * @dev When assigning ethers objects as refs, we must wrap the object in `markRaw` for assignment. This is not required
+ * with Vue 2's reactivity system based on Object.defineProperty, but is required for Vue 3's reactivity system based
+ * on ES6 proxies. The Vue 3 reactivity system does not work well with non-configurable, non-writable properties on
+ * objects, and many ethers classes, such as providers and networks, use non-configurable or non-writable properties.
+ * Therefore we wrap the object in `markRaw` to prevent it from being converted to a Proxy. If you do not do this,
+ * you'll see errors like this when using ethers objects as refs:
+ *     Uncaught (in promise) TypeError: 'get' on proxy: property '_network' is a read-only and non-configurable data
+ *     property on the proxy target but the proxy did not return its actual value (expected '#<Object>' but got
+ *     '[object Object]')
+ * Read more here:
+ *     - https://stackoverflow.com/questions/65693108/threejs-component-working-in-vuejs-2-but-not-3
+ *     - https://github.com/vuejs/vue-next/issues/3024
+ *     - https://v3.vuejs.org/api/basic-reactivity.html#markraw
  */
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, readonly, markRaw } from 'vue';
+import useDataStore from 'src/store/data';
 import useSettingsStore from 'src/store/settings';
-import { JsonRpcSigner, Network, Web3Provider } from 'src/utils/ethers';
+import { JsonRpcProvider, JsonRpcSigner, Network, Web3Provider } from 'src/utils/ethers';
 import { formatAddress } from 'src/utils/formatters';
 import Onboard from 'bnc-onboard';
 import { API as OnboardAPI } from 'bnc-onboard/dist/src/interfaces';
 import { getAddress } from 'src/utils/ethers';
+import { RPC_URL } from 'src/utils/constants';
 
+const { startPolling } = useDataStore();
 const { setLastWallet } = useSettingsStore();
+const defaultProvider = new JsonRpcProvider(RPC_URL);
 
 // State variables
-let onboard: OnboardAPI;
-const supportedChainIds = [1]; // chain IDs supported by this app
+let onboard: OnboardAPI; // instance of Blocknative's onboard.js library
+const supportedChainIds = [1, 4]; // chain IDs supported by this app
 const rawProvider = ref<any>(); // raw provider from the user's wallet, e.g. EIP-1193 provider
-const provider = ref<Web3Provider>(); // ethers provider
+const provider = ref<Web3Provider | JsonRpcProvider>(defaultProvider); // ethers provider
 const signer = ref<JsonRpcSigner>(); // ethers signer
 const userAddress = ref<string>(); // user's wallet address
 const userEns = ref<string>(); // user's ENS name
 const network = ref<Network>(); // connected network, derived from provider
 
-/**
- * @notice Clear wallet state, useful when user switches wallets. We don't need to clear the provider and signer and
- * ethers will automatically update those
- */
+// Reset state when, e.g.user switches wallets. Provider/signer are automatically updated by ethers so are not cleared
 function resetState() {
   userAddress.value = undefined;
   network.value = undefined;
 }
 
 // Settings
-const rpcUrl = `https://mainnet.infura.io/v3/${import.meta.env.VITE_INFURA_API_KEY}`;
 const infuraApiKey = import.meta.env.VITE_INFURA_API_KEY;
 const walletChecks = [{ checkName: 'connect' }];
 const wallets = [
   { walletName: 'metamask', preferred: true },
   { walletName: 'walletConnect', infuraKey: infuraApiKey, preferred: true },
   { walletName: 'torus', preferred: true },
-  { walletName: 'ledger', rpcUrl, preferred: true },
-  { walletName: 'lattice', rpcUrl, appName: 'Umbra' },
+  { walletName: 'ledger', rpcUrl: RPC_URL, preferred: true },
+  { walletName: 'lattice', rpcUrl: RPC_URL, appName: 'Umbra' },
 ];
 
 export default function useWalletStore() {
@@ -93,11 +107,6 @@ export default function useWalletStore() {
   }
 
   // ----------------------------------------------------- Actions -----------------------------------------------------
-  // Try connecting user's wallet on page load
-  onMounted(async () => {
-    // const { lastWallet } = useSettingsStore();
-    // if (lastWallet.value) await connectWallet(lastWallet.value);
-  });
 
   // When user connects their wallet, we call this method to update the provider
   function setProvider(p: any) {
@@ -126,7 +135,7 @@ export default function useWalletStore() {
     // Exit if not a valid network
     const chainId = _provider.network.chainId; // must be done after the .getNetwork() call
     if (!supportedChainIds.includes(chainId)) {
-      network.value = _network; // save network for checking if this is a supported network
+      network.value = markRaw(_network); // save network for checking if this is a supported network
       return;
     }
 
@@ -135,11 +144,14 @@ export default function useWalletStore() {
 
     // Now we save the user's info to the store. We don't do this earlier because the UI is reactive based on these
     // parameters, and we want to ensure this method completed successfully before updating the UI
-    provider.value = _provider;
+    provider.value = markRaw(_provider);
     signer.value = _signer;
     userAddress.value = _userAddress;
     userEns.value = _userEns;
-    network.value = _network;
+    network.value = markRaw(_network);
+
+    // Start polling for data
+    startPolling();
   }
 
   // ---------------------------------------------------- Exports ----------------------------------------------------

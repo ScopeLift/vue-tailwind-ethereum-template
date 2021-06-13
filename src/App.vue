@@ -7,13 +7,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+import useSettingsStore from 'src/store/settings';
+import useWalletStore from 'src/store/wallet';
 import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutFooter from './components/LayoutFooter.vue';
 
 export default defineComponent({
   name: 'App',
   components: { LayoutHeader, LayoutFooter },
+  setup() {
+    // Try connecting user's wallet on page load
+    const { connectWallet } = useWalletStore();
+    const { lastWallet } = useSettingsStore();
+    onMounted(async () => {
+      if (lastWallet.value) await connectWallet(lastWallet.value);
+    });
+  },
 });
 </script>
 

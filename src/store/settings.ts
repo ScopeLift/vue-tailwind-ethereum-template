@@ -1,3 +1,7 @@
+/**
+ * @dev User settings are managed here and persisted with localStorage
+ */
+
 import { computed, onMounted, ref } from 'vue';
 import nightwind from 'nightwind/helper';
 
